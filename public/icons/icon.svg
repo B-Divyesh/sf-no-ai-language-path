@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Four study slips arranged as a path">
+  <rect width="512" height="512" rx="88" fill="#F3E9D3"/>
+  <path d="M92 106h226v76H92z" fill="#2457D6" stroke="#172B33" stroke-width="12"/>
+  <path d="M166 194h254v76H166z" fill="#D94B37" stroke="#172B33" stroke-width="12"/>
+  <path d="M92 282h226v76H92z" fill="#E2AD32" stroke="#172B33" stroke-width="12"/>
+  <path d="M166 370h254v76H166z" fill="#287A58" stroke="#172B33" stroke-width="12"/>
+  <circle cx="124" cy="144" r="14" fill="#FFF9EA"/><circle cx="388" cy="232" r="14" fill="#FFF9EA"/>
+  <circle cx="124" cy="320" r="14" fill="#172B33"/><circle cx="388" cy="408" r="14" fill="#FFF9EA"/>
+</svg>

@@ -1,0 +1,13 @@
+{
+  "name": "No-AI Language Path",
+  "short_name": "Language Path",
+  "description": "A private, inspectable language study routine.",
+  "start_url": "/?source=installed-v1",
+  "display": "standalone",
+  "background_color": "#F3E9D3",
+  "theme_color": "#F3E9D3",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
