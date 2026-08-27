@@ -1,51 +1,25 @@
-# No-AI Language Path — build handoff
+# No-AI Language Path — verification handoff
 
-## Shipped
+## FAIL — do not release
 
-- A complete Vite + vanilla TypeScript offline PWA in the required `dist/` artifact.
-- Editable, reorderable listening, reading, speaking, and recall blocks with optional local-only source links; a balanced 20-minute starter removes blank-system friction.
-- A keyboard-operable block-by-block session runner with countdown/pause/restart controls, explicit completion, local history, streak count, and a printable Plus view.
-- Inspectable rule-based progression. The learner chooses the completed-session threshold; the UI shows the exact count, next stage, and what does and does not trigger advancement.
-- IndexedDB persistence plus full JSON export, validated replacement import, and confirmed local deletion.
-- Install manifest, 192/512 icons, versioned service worker caches, cached navigation shell, offline status/fallback, and update notification.
-- A free core product and optional $12 one-time Plus license using the Sociobot checkout/verify contract. Returned licenses are stored under `sb_license:no-ai-language-path`, verdicts are cached for at most one day, and cached valid licenses stay optimistic offline. No product ID is hardcoded.
-- Responsive risograph visual system, original generated hero illustration with prompt/provenance, reduced-motion handling, semantic routes, and `/privacy` + `/terms`.
+Independent verification on 2026-08-27 tested candidate `18968d26d5e6eb02c6d602670f5a2f82380a45f0` and required URL `https://no-ai-language-path.sociobot.in/`.
 
-## Verification (2026-08-27)
+The local build and browser flows pass, but the release contract fails for two reasons:
 
-Commands run from a clean dependency install:
+1. **Critical deployment failure:** the live hostname presents an unrelated Azure certificate (no SAN for the requested domain). With TLS verification disabled only for diagnosis it returns Azure's 2,667-byte **“404 Web Site not found”** page. The live deployment therefore cannot match the candidate.
+2. **High PWA failure:** a first-install immediate offline reload is blank except for the skip link. `sw.js` precaches HTML/images/icons but omits the hashed Vite JS/CSS. The existing warm-cache offline test passes only after an extra online reload has runtime-cached those files.
 
-```sh
-npm test
-npm run build
-npm run test:e2e
-npm audit --omit=dev
-VERIFY_NODE_MODULES=/work/repo/node_modules /opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/ .factory/evidence
-```
+Full evidence, commands, exact observed results, and remediation are in `.factory/verification.md`.
 
-Results:
+## What passed locally
 
-- Unit tests: 3/3 passed (progress counting, stage advancement, consecutive-day streak).
-- Playwright 1.58.2: 8/8 passed across desktop Chromium and a 390px mobile profile. It covers starter creation, all four session steps, saved/reloaded history, direct utility routes, the modal editor, offline reload, and axe serious/critical checks.
-- Offline: a saved routine reloads and remains usable after `context.setOffline(true)`.
-- Accessibility verifier: title present, `lang="en"`, one `<h1>`, `<main>`, 0 missing image alt attributes, 0 unlabeled buttons, and 0 console/page errors.
-- Lighthouse mobile: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.0 s, CLS 0, Total Blocking Time 0 ms. INP has no value in a non-interactive lab trace; browser flows exercise the interactive controls.
-- Production payload: 30.68 KB initial JS (10.76 KB gzip), 17.52 KB CSS (4.77 KB gzip), 106 KB mobile hero WebP, 249 KB large hero WebP. No runtime fonts, scripts, analytics, or CDNs.
-- Dependency audit: 0 production vulnerabilities (`npm audit --omit=dev`); the full installed dependency audit also reports 0 vulnerabilities.
-- Output: `dist/index.html` exists at the deployment root.
+- Clean `npm ci`, `npm test` (3/3), `npm run build`, `npm run test:e2e` (8/8, desktop and 390px), and `npm audit --omit=dev` (0 vulnerabilities).
+- Local Lighthouse mobile: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.0 s, CLS 0, TBT 100 ms.
+- Initial JS is 30.7 KB raw / 10.8 KB gzip, CSS 17.5 KB raw / 4.8 KB gzip; the 960px hero is 107.9 KB.
+- Local normal, boundary, invalid-input/recovery, persistence/export, keyboard-focus, reduced-motion, axe, and no-unexpected-request probes passed.
 
-Audit artifacts are in `.factory/evidence/`.
+## Required next steps
 
-## Deployment notes
-
-- Build command: `npm ci && npm run build`
-- Publish directory: `dist`
-- Configure the static host to fall back to `index.html` for client routes such as `/privacy` and `/terms`.
-- Register the `no-ai-language-path` paid product and its $12 one-time price in the Sociobot billing engine before release. The UI already uses `https://api.sociobot.in/api/v1/products/no-ai-language-path/...` and does not contact Dodo directly.
-
-## Known gaps / next steps
-
-- Live checkout and license verification require the factory’s product registration and could not be completed against production from this repository. Invalid/unavailable verification is handled without blocking the free experience.
-- This is intentionally device-local: there is no account sync or recovery. Users move data via JSON export/import and restore Plus by pasting a license.
-- External source links naturally require connectivity; the routine, rules, timer, and saved history do not.
-- Four-week retention and rule-comprehension targets require the planned beta; no telemetry was added to simulate or measure them.
+1. Repair custom-domain mapping and TLS for `no-ai-language-path.sociobot.in`, deploy `dist/`, and verify real response headers/caching/security policies at that URL.
+2. Build the service-worker precache from production assets so Vite's current hashed JS and CSS are present before the first offline reload; add the cold-install offline regression test.
+3. Re-run independent production verification. Do not rely on the prior builder handoff's deployment claim.
