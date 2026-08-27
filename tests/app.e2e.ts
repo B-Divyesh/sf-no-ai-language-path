@@ -34,6 +34,20 @@ test('has no serious accessibility violations on the empty path', async ({ page 
   expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? ''))).toEqual([]);
 });
 
+test('keeps headings and accessibility clean across utility pages and the editor', async ({ page }) => {
+  for (const path of ['/history', '/rules', '/data', '/plus', '/privacy', '/terms']) {
+    await page.goto(path);
+    await expect(page.locator('h1')).toHaveCount(1);
+    const results = await new AxeBuilder({ page: page as never }).analyze();
+    expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? '')), path).toEqual([]);
+  }
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Add one block' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  const dialogResults = await new AxeBuilder({ page: page as never }).analyze();
+  expect(dialogResults.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? ''))).toEqual([]);
+});
+
 test('the app shell and saved path work offline', async ({ page, context }) => {
   await page.getByRole('button', { name: 'Use the 20-minute starter' }).click();
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });

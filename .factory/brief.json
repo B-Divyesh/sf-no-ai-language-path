@@ -1,0 +1,30 @@
+{
+  "slug": "no-ai-language-path",
+  "title": "No-AI Language Path",
+  "territory": "utilities",
+  "user": "A privacy- or quality-conscious language learner who wants a structured interactive routine without generative AI or opaque personalization.",
+  "evidence": [
+    {
+      "url": "https://hn.algolia.com/api/v1/items/48444372",
+      "date": "2026-06-08",
+      "quote_or_summary": "The asker specifically seeks an interactive language app/site that does not use LLMs or generative AI because familiar products now do."
+    },
+    {
+      "url": "https://github.com/ankitects/anki/issues/4469",
+      "date": "2025-12-15",
+      "quote_or_summary": "A user reports that changing a deck preset silently overwrites desired retention, illustrating the need for visible, trustworthy study settings rather than hidden personalization."
+    }
+  ],
+  "recurrence": "A direct 2026 request and a separate 2025 configuration failure both point to demand for learner agency and inspectable rules.",
+  "current_workaround": "Use scattered Anki decks, textbooks, and podcasts, or accept an app whose AI behavior and personalization are not controllable.",
+  "incumbents_and_gap": "Duolingo, Babbel, Busuu, and many newer apps add AI features; Anki is flexible but starts as a blank system. The gap is a transparent routine builder that never sends text to a model.",
+  "smallest_useful_product": "An offline routine composer combining user-selected listening, reading, speaking, and recall blocks with timer/checklists and plain rule-based progression. Non-goals: chat tutoring, auto-generated exercises, or content licensing.",
+  "success_measure": "In a four-week beta, 60% of users complete a self-authored routine at least three days/week and can correctly explain every progression rule shown in their plan.",
+  "artifact_class": "pwa-offline",
+  "monetization": "one-time — its promise is durable local control rather than a metered AI service.",
+  "constraints": "Prominently commit to no model calls and no telemetry by default; user-provided links/files must remain private; avoid claims that a fixed routine produces fluency.",
+  "est_build_effort": "S",
+  "why_distinct": "The product’s value is inspectable non-generative structure, not an LLM tutor with a privacy toggle.",
+  "confidence": 4,
+  "state": "BUILT"
+}

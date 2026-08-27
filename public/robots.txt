@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://no-ai-language-path.sociobot.in/sitemap.xml

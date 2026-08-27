@@ -74,7 +74,7 @@ function footer() {
 function shell(content: string) {
   const offline = navigator.onLine ? '' : `<div class="status offline" role="status"><strong>Offline:</strong> everything on this path still works. External source links wait for a connection.</div>`;
   const storage = storageAvailable ? '' : `<div class="status error" role="alert">Browser storage is unavailable. Changes last only in this tab; export your data now.</div>`;
-  app.innerHTML = `${header()}${offline}${storage}<main id="main" tabindex="-1">${content}</main>${footer()}<div class="live" aria-live="polite">${esc(message)}</div><div id="update-toast" class="toast" hidden role="status">A fresh version is ready. <button type="button" data-reload>Reload</button></div>`;
+  app.innerHTML = `${header()}${offline}${storage}<main id="main" tabindex="-1">${content}</main>${footer()}<div class="live" aria-live="polite">${esc(message)}</div><div id="update-toast" class="toast" hidden role="status">A fresh version is ready. <button type="button" data-reload aria-label="Reload updated app">Reload</button></div>`;
   bindCommon();
 }
 
@@ -113,7 +113,7 @@ function home() {
       <div class="section-head"><div><p class="kicker">Your workbench${state.language ? ` · ${esc(state.language)}` : ''}</p><h2 id="path-heading">${esc(state.routineName)}</h2></div>
       ${state.blocks.length ? `<div class="summary"><strong>${totalMinutes()} min</strong><span>${state.blocks.length} blocks</span></div>` : ''}</div>
       ${blocks}
-      <details class="path-settings"><summary>Name this path</summary><form class="inline-form" data-path-form><label>Path name<input name="routineName" value="${esc(state.routineName)}" maxlength="60" required></label><label>Language <span>(optional)</span><input name="language" value="${esc(state.language)}" maxlength="40" placeholder="e.g. Japanese"></label><button class="button secondary" type="submit">Save details</button></form></details>
+      <details class="path-settings"><summary>Name this path</summary><form class="inline-form" data-path-form><label>Path name<input name="routineName" value="${esc(state.routineName)}" maxlength="60" required></label><label>Language <span>(optional)</span><input name="language" value="${esc(state.language)}" maxlength="40" placeholder="e.g. Japanese"></label><button class="button secondary" type="submit" aria-label="Save path details">Save details</button></form></details>
     </section>
     ${state.blocks.length ? progressStrip() : ''}
     ${editBlock ? blockDialog() : ''}
@@ -423,7 +423,12 @@ async function init() {
   window.addEventListener('online', render);
   window.addEventListener('offline', render);
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-    navigator.serviceWorker.addEventListener('controllerchange', () => { const toast = document.querySelector<HTMLElement>('#update-toast'); if (toast) toast.hidden = false; });
+    let hadController = Boolean(navigator.serviceWorker.controller);
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController) { hadController = true; return; }
+      const toast = document.querySelector<HTMLElement>('#update-toast');
+      if (toast) toast.hidden = false;
+    });
     navigator.serviceWorker.register('/sw.js').catch(() => { /* the web app remains functional */ });
   }
 }

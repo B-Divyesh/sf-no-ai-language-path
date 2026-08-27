@@ -1,4 +1,4 @@
-const VERSION = 'nlp-v1.0.0';
+const VERSION = 'nlp-v1.0.1';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
@@ -25,16 +25,20 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== location.origin) return;
 
   if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).then((response) => {
+    event.respondWith(fetch(request).then(async (response) => {
       const copy = response.clone();
-      caches.open(RUNTIME).then((cache) => cache.put(request, copy));
+      const cache = await caches.open(RUNTIME);
+      await cache.put(request, copy);
       return response;
     }).catch(async () => (await caches.match('/index.html')) || (await caches.match('/offline.html'))));
     return;
   }
 
-  event.respondWith(caches.match(request).then((cached) => cached || fetch(request).then((response) => {
-    if (response.ok) caches.open(RUNTIME).then((cache) => cache.put(request, response.clone()));
+  event.respondWith(caches.match(request).then((cached) => cached || fetch(request).then(async (response) => {
+    if (response.ok) {
+      const cache = await caches.open(RUNTIME);
+      await cache.put(request, response.clone());
+    }
     return response;
   })));
 });
