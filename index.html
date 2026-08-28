@@ -8,6 +8,16 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/icons/icon-192.png" />
     <title>No-AI Language Path — your routine, your rules</title>
+    <script>
+      // Start installation before the application module is requested. This
+      // gives the worker time to claim this first page, so its next navigation
+      // can use the precached shell even when the connection is gone.
+      if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+        navigator.serviceWorker.register('/sw.js').catch(() => {
+          // The online app continues to work when worker registration is unavailable.
+        });
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>

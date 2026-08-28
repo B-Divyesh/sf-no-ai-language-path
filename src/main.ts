@@ -429,7 +429,6 @@ async function init() {
       const toast = document.querySelector<HTMLElement>('#update-toast');
       if (toast) toast.hidden = false;
     });
-    navigator.serviceWorker.register('/sw.js').catch(() => { /* the web app remains functional */ });
   }
 }
 

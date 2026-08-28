@@ -1,5 +1,15 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+
+async function waitForServiceWorkerControl(page: Page) {
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    if (navigator.serviceWorker.controller) return;
+    await new Promise<void>((resolve) => {
+      navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
+    });
+  });
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -70,7 +80,10 @@ test('the app shell and saved path work offline', async ({ page, context }) => {
 });
 
 test('cold-install precaches the hashed app shell before an offline reload', async ({ page, context, browserName }) => {
-  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  // `ready` only says that a worker is active. A cold offline navigation needs
+  // the stronger guarantee that this first page is already controlled.
+  await waitForServiceWorkerControl(page);
+  await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
 
   const cachedUrls = await page.evaluate(async () => {
     const names = await caches.keys();

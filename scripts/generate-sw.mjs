@@ -39,10 +39,14 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(Promise.all([
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => ![SHELL, RUNTIME].includes(key)).map((key) => caches.delete(key)))),
-    self.clients.claim()
-  ]));
+  // Claim first, before non-essential cache housekeeping. Worker readiness means an
+  // active worker, not necessarily a worker controlling this first client;
+  // prioritising the claim makes the following navigation reliably offline.
+  event.waitUntil(self.clients.claim().then(() =>
+    caches.keys().then((keys) => Promise.all(keys
+      .filter((key) => ![SHELL, RUNTIME].includes(key))
+      .map((key) => caches.delete(key))))
+  ));
 });
 
 self.addEventListener('fetch', (event) => {
