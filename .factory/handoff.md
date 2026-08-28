@@ -33,6 +33,14 @@ There is no separate lint script in this TypeScript project; `npx tsc --noEmit` 
 
 ## Deploy and handoff
 
-Build with `npm run build`; deploy the unchanged static artifact root at `dist/` (it contains `index.html`). The deployment step and live HTTPS identity verification are recorded after publish below.
+Commit `0a6f7f0` (`fix: make PWA precache Vary-tolerant`) is pushed to `main` and was deployed as the unchanged static artifact root at `dist/` using `/opt/fleet/lib/deploy-static.sh no-ai-language-path /work/repo/dist` (Azure deployment `c074d3ff-470f-4bb1-a07d-7cd3ac4056bc`).
 
-Known gaps: none for the verifier's release blocker. The product intentionally remains a static, local-first PWA with no server API or consumer package.
+Post-deploy checks at <https://no-ai-language-path.sociobot.in/> passed:
+
+- `/opt/fleet/lib/verify-url.sh` returned HTTPS 200 in 639 ms with the required title, language, one `h1`, `main`, image alts, labelled buttons, and no browser errors.
+- SHA-256 comparison found **13/13** deployed files byte-identical to fresh `dist/` (HTML, worker, manifest, assets, icons, artwork, and static files).
+- Fresh controlled live contexts, after ordinary HTTP-cache clearing and immediate offline reload, rendered the app and enabled the starter action on desktop and iPhone 13 / 390px; both had no page errors.
+- Live axe scans of `/`, `/history`, `/rules`, `/data`, `/plus`, `/privacy`, and `/terms` found **0 serious/critical** violations; every route had one `h1` and one `main`.
+- The live manifest has the expected name, standalone display, versioned installed start URL, and 192/512 icons. TLS presents `CN=no-ai-language-path.sociobot.in` with a matching SAN; HSTS, `Referrer-Policy: strict-origin-when-cross-origin`, and `X-Content-Type-Options: nosniff` are present.
+
+Known gaps: none for the verifier's release blocker. The existing Azure response policy still uses 30-second revalidation for fingerprinted assets and does not send a CSP; these were previously recorded as non-blocking deployment hardening items. The product intentionally remains a static, local-first PWA with no server API or consumer package.
