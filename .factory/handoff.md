@@ -37,9 +37,19 @@ The browser suite covers saved routine completion, history persistence, empty/ed
 
 Production build budgets remain within the static-PWA limits: JavaScript 30,684 B raw / 10,760 B gzip; CSS 17,521 B raw / 4,770 B gzip; mobile hero 107,862 B. `dist/index.html` is at the artifact root.
 
-## Deploy
+## Deployed verification
 
-Push the repair commit on `main`; the configured static deployment publishes `dist/` with history fallback to `index.html`. After deployment, re-run the live identity check against `https://no-ai-language-path.sociobot.in/` and the cold-install test using a fresh Chromium profile. The verifier's non-blocking static-hosting hardening observations (immutable cache headers for hashed assets and a CSP) require deployment-platform configuration, which is not present in this repository.
+Repair commit `0a4585fec03df781bfce28b9b1d5a56c95bc3a49` was pushed to `main` and deployed with the work-order static configuration (`dist/`) to Azure Static Web Apps. Deployment `0b876143-a876-4499-9e86-797aa17d20a6` completed successfully; `https://no-ai-language-path.sociobot.in/` returned HTTPS 200.
+
+Post-deploy checks at 2026-08-28 00:40 UTC:
+
+- `dist/sw.js` and live `/sw.js` had the identical SHA-256 `7bcd6f1af80f57f0b6f99c9a0e57a4c9191895f3a791eeb7cdb8797b3290a274`.
+- The live worker's install precache included `/assets/index-BkxE4ZNp.css` and `/assets/index-DbQ5cBAh.js`.
+- `verify-url.sh` found live title and `lang`, one `h1`, a `main`, no images missing `alt`, no unlabelled buttons, and no page/console errors (627 ms desktop load).
+- Fresh live Desktop Chromium and 390px mobile contexts cleared their normal HTTP caches, retained Cache Storage, went offline, then reloaded to “Study by your rules.” with `<main>` present. Both cached entry assets and had no horizontal overflow or browser errors.
+- Normal live first loads requested only `https://no-ai-language-path.sociobot.in`; no analytics, font CDN, model, or other third-party request was observed. `/privacy` returned the history-fallback app shell with HTTPS 200 and the expected HSTS, referrer-policy, and `nosniff` headers.
+
+The static deploy utility generated the required history-fallback configuration in the deployed `dist/` artifact. The verifier's non-blocking hosting-hardening observations remain: Azure currently serves hashed assets with 30-second revalidation and no CSP. Those headers are deployment-platform concerns and do not affect the fixed cold-install path.
 
 ## Known gaps
 
