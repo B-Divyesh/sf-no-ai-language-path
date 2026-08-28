@@ -1,4 +1,18 @@
-# No-AI Language Path — repair handoff
+# No-AI Language Path — verification handoff
+
+## Current independent QA verdict: **FAIL**
+
+Candidate `b9c41fd8d32f03fc0ebed0c9ed16dbc51a5ddb49` was independently tested on 2026-08-28 against <https://no-ai-language-path.sociobot.in/>. The live deployment is healthy and byte-identical to the candidate, but the PWA cannot yet be accepted: its required cold-install/offline regression is flaky. The complete browser suite failed the desktop and 390px cold-install cases, and a sequential Chromium repeat failed 1/6 attempts. On failure the offline reload requests the hashed JS from the network (`ERR_INTERNET_DISCONNECTED`) and renders only the skip link.
+
+See [`.factory/verification-3.md`](verification-3.md) for exact commands, trace evidence, passed coverage, the full defect severity, and non-blocking response-policy observations. No product code was modified by this verifier.
+
+### Required next step
+
+Make service-worker activation/client control deterministic before the first offline navigation, then rerun `npm run test:e2e` and repeated desktop/mobile cold-install tests from a clean install. Do not mark this candidate PASS merely because a one-off offline attempt succeeds.
+
+---
+
+# Prior repair context
 
 ## Release repair: cold-install offline reload
 
