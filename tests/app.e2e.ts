@@ -79,32 +79,57 @@ test('the app shell and saved path work offline', async ({ page, context }) => {
   await expect(page.getByRole('button', { name: /Start 20-minute session/ })).toBeEnabled();
 });
 
-test('cold-install precaches the hashed app shell before an offline reload', async ({ page, context, browserName }) => {
-  // `ready` only says that a worker is active. A cold offline navigation needs
-  // the stronger guarantee that this first page is already controlled.
-  await waitForServiceWorkerControl(page);
-  await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
+test('a fresh controlled profile boots from the precache with Vary: Origin offline', async ({ browser, browserName }, testInfo) => {
+  const projectUse = testInfo.project.use;
+  const baseURL = projectUse.baseURL;
+  if (!baseURL) throw new Error('The offline regression test needs a configured base URL.');
 
-  const cachedUrls = await page.evaluate(async () => {
-    const names = await caches.keys();
-    const urls = await Promise.all(names.map(async (name) => (await caches.open(name)).keys()));
-    return urls.flat().map((request) => new URL(request.url).pathname);
+  // This must be a separate brand-new context. In particular, do not reload or
+  // otherwise navigate online after this page becomes controlled: that would
+  // populate a request-compatible runtime entry and hide a broken precache.
+  const freshContext = await browser.newContext({
+    viewport: projectUse.viewport,
+    userAgent: projectUse.userAgent,
+    deviceScaleFactor: projectUse.deviceScaleFactor,
+    isMobile: projectUse.isMobile,
+    hasTouch: projectUse.hasTouch
   });
-  expect(cachedUrls).toContain('/index.html');
-  expect(cachedUrls).toEqual(expect.arrayContaining([
-    expect.stringMatching(/^\/assets\/index-.*\.js$/),
-    expect.stringMatching(/^\/assets\/index-.*\.css$/)
-  ]));
+  const freshPage = await freshContext.newPage();
 
-  // Reproduce the verifier's fresh-profile condition: retain Cache Storage but
-  // remove the ordinary HTTP cache before taking the next navigation offline.
-  if (browserName === 'chromium') {
-    const client = await context.newCDPSession(page);
-    await client.send('Network.clearBrowserCache');
-    await client.detach();
+  try {
+    await freshPage.goto(baseURL);
+    await waitForServiceWorkerControl(freshPage);
+    await expect.poll(() => freshPage.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
+
+    const precache = await freshPage.evaluate(async () => {
+      const shellName = (await caches.keys()).find((name) => name.endsWith('-shell'));
+      if (!shellName) return [];
+      const shell = await caches.open(shellName);
+      return Promise.all((await shell.keys()).map(async (request) => ({
+        path: new URL(request.url).pathname,
+        vary: (await shell.match(request, { ignoreVary: true }))?.headers.get('vary') ?? ''
+      })));
+    });
+    expect(precache.map((entry) => entry.path)).toEqual(expect.arrayContaining([
+      '/index.html',
+      expect.stringMatching(/^\/assets\/index-.*\.js$/),
+      expect.stringMatching(/^\/assets\/index-.*\.css$/)
+    ]));
+    const appAssets = precache.filter((entry) => /^\/assets\/index-.*\.(js|css)$/.test(entry.path));
+    expect(appAssets).toHaveLength(2);
+    // Vite preview deliberately exposes the problematic host behaviour.
+    expect(appAssets.every((entry) => /origin/i.test(entry.vary))).toBe(true);
+
+    if (browserName === 'chromium') {
+      const client = await freshContext.newCDPSession(freshPage);
+      await client.send('Network.clearBrowserCache');
+      await client.detach();
+    }
+    await freshContext.setOffline(true);
+    await freshPage.reload();
+    await expect(freshPage.getByRole('heading', { name: 'Study by your rules.' })).toBeVisible();
+    await expect(freshPage.getByRole('button', { name: 'Use the 20-minute starter' })).toBeEnabled();
+  } finally {
+    await freshContext.close();
   }
-  await context.setOffline(true);
-  await page.reload();
-  await expect(page.getByRole('heading', { name: 'Study by your rules.' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Use the 20-minute starter' })).toBeEnabled();
 });

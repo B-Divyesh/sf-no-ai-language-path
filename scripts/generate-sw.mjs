@@ -61,17 +61,34 @@ self.addEventListener('fetch', (event) => {
       const cache = await caches.open(RUNTIME);
       await cache.put(request, copy);
       return response;
-    }).catch(async () => (await caches.match('/index.html')) || (await caches.match('/offline.html'))));
+    }).catch(async () => {
+      const shell = await caches.open(SHELL);
+      return (await shell.match('/index.html', { ignoreVary: true }))
+        || (await shell.match('/offline.html', { ignoreVary: true }));
+    }));
     return;
   }
 
-  event.respondWith(caches.match(request).then((cached) => cached || fetch(request).then(async (response) => {
+  event.respondWith((async () => {
+    // cache.addAll() stores the precache request without the page's Origin
+    // header. Some otherwise-valid static hosts add Vary: Origin, while
+    // controlled module/style requests include that header. The shell consists
+    // only of same-origin, revisioned build files, so an ignore-Vary lookup is
+    // both safe and required for a portable first offline reload.
+    const shell = await caches.open(SHELL);
+    const precached = await shell.match(request, { ignoreVary: true });
+    if (precached) return precached;
+
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    const response = await fetch(request);
     if (response.ok) {
       const cache = await caches.open(RUNTIME);
       await cache.put(request, response.clone());
     }
     return response;
-  })));
+  })());
 });
 `;
 
