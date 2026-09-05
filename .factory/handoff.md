@@ -1,31 +1,38 @@
-# Verification handoff 5 — PASS
+# Review 1 handoff — FAIL
 
-**Tested candidate:** `848f83000f0f9a7cf4c2bfe32966cab1845331be`
-**Verified URL:** <https://no-ai-language-path.sociobot.in/>
-**Date:** 2026-08-28 UTC
+Review date: 2026-09-05 UTC
 
-Independent QA accepts this candidate. A fresh production build is byte-identical to the live deployment (13/13 files), and the prior fresh-install/offline failures do not reproduce.
+- Implementation reviewed: `0a6f7f083e4f08899d8435b1b08fb151d78a6fa0`
+- Documentation reviewed: `9b687f93f5fa11a7d3099893265f4db7007d7b9c`
+- Live URL: <https://no-ai-language-path.sociobot.in/>
+- Full report: `.factory/review-1.md`
+- Result: **FAIL — 10 findings and 30 untested public claim groups**
 
-## Verification performed
+## Work completed
+
+Reviewed the live PWA in fresh desktop and 390 px phone profiles and compared it with a fresh production build. Exercised the realistic starter, normal routine completion, invalid and boundary inputs, import/export, persistence, offline reload, update notice, keyboard and focus behavior, reduced motion, accessibility, legal routes, internal links, not-found behavior, privacy requests, and billing entry. No product code was changed.
+
+## Verification
 
 ```sh
 npm ci
-npm test                 # 3/3 passed
-npx tsc --noEmit         # passed
-npm run build            # passed; dist/ generated
-npm run test:e2e         # 12/12 passed, desktop + 390px mobile
-npm audit --omit=dev     # 0 vulnerabilities
+npm test
+npx tsc --noEmit
+npm run build
+npm run test:e2e
+npm audit --omit=dev
+/opt/fleet/lib/verify-url.sh https://no-ai-language-path.sociobot.in/ /work/.evidence/verify-url
 ```
 
-- Lighthouse against local production mobile: **100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO**; FCP 0.9 s, LCP 1.1 s, TBT 0 ms, CLS 0.
-- Build assets meet budget: 30,627 B JS raw / 10,740 B gzip; 17,521 B CSS raw / 4,770 B gzip; 107,862 B mobile hero.
-- Local and live user-flow checks passed: starter routine, full session/history, 1/90-minute boundaries, invalid `ftp:` source then valid HTTPS recovery, 1/30 progression boundaries, malformed-import recovery, and persisted local state.
-- Desktop and 390px passes found no console/page errors, failed requests, horizontal overflow, or axe serious/critical findings. Keyboard skip navigation/Enter and the designed 4 px focus ring work; reduced motion resolves transitions to 0.001 s.
-- Fresh PWA profiles passed immediate offline reload after browser HTTP-cache clearing: 4/4 each for local desktop, local 390px, live desktop, and live 390px. The shell contained the current hashed JS/CSS. A changed-worker probe displayed **“A fresh version is ready. Reload”** without errors.
-- Normal loads made only first-party requests. Study data remains IndexedDB-local with export/import; no analytics, model calls, upload route, third-party runtime assets, or normal-flow billing request was found. `/privacy` and `/terms` are present and accurate.
+All repository commands above passed. The build produced `dist/`, all 13 deployable files matched live bytes, four fresh live offline reloads passed, and live mobile Lighthouse scored 100/100/100/100. Axe found no violations across eight routes in desktop and phone profiles.
 
-## Known gap — low severity deployment hardening
+## Required next work
 
-Live fingerprinted JS/CSS use `Cache-Control: public, must-revalidate, max-age=30`, rather than long-lived immutable caching, and the origin sends no CSP. This did not affect the candidate’s measured performance, offline functionality, privacy behavior, or release result, but the deployment owner should harden it.
+1. Add the isolated one-click sample demo, persistent demo label, reset/start-real controls, `.factory/demo.md`, and isolation tests.
+2. Add `.factory/claims.json` and one tagged observable test for each public claim; remove any claim that cannot be tested.
+3. Enable the live $12 checkout, which currently returns 404.
+4. Reject fractional or invalid imported rules/stages.
+5. Repair first-screen copy/action placement, route titles and metadata, focus management, 404 status, required landing/footer structure, and plain-word copy.
+6. Add CSP and long immutable caching for fingerprinted assets.
 
-Full evidence: `.factory/verification-5.md`.
+Earlier TLS, missing-precache, activation-race, and `Vary: Origin` findings remain fixed. The prior cache/CSP finding remains open. See `.factory/review-1.md` for exact evidence and severity.
