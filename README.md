@@ -1,44 +1,59 @@
 # No-AI Language Path
 
-No-AI Language Path is a private, offline routine composer for language learners who want structure without a generative tutor or hidden personalization. Learners arrange listening, reading, speaking, and recall blocks, follow the built-in timer/checklist, and advance through a rule they can inspect and change.
+Build and follow a private language study routine. The app is for learners who bring their own listening, reading, speaking, and recall material.
 
-Live: <https://no-ai-language-path.sociobot.in>
+Live app: <https://no-ai-language-path.sociobot.in>
 
-## What v1 includes
+One-click sample: <https://no-ai-language-path.sociobot.in/demo>
 
-- Editable, reorderable four-skill routine blocks with optional private source links
-- A focused block-by-block session timer and local completion history
-- A plain progression rule: finish the chosen number of complete sessions to advance
-- IndexedDB persistence, installable PWA shell, and tested offline reuse
-- Complete JSON export/import and explicit local deletion
-- Free core experience; optional $12 one-time Plus license for 90-day history and printable sheets
-- `/privacy` and `/terms` routes, with no analytics, trackers, model calls, or third-party runtime assets
+## What it does
 
-The researched opportunity is in [`.factory/brief.json`](.factory/brief.json), the product-specific risograph system and image provenance are in [`.factory/design.md`](.factory/design.md), and build verification is in [`.factory/handoff.md`](.factory/handoff.md).
+- Builds editable and reorderable four-part routines with optional source links.
+- Guides each session with a timer and ordered checklist.
+- Records complete sessions and applies one visible progression rule.
+- Stores routine data in IndexedDB and works offline after the first visit.
+- Exports complete JSON backups, confirms imports, and supports local deletion.
+- Runs without an account, model calls, analytics, trackers, or third-party runtime assets.
 
-## Who it is for
+The sample uses a separate `demo:no-ai-language-path` IndexedDB database. Reset restores its four Spanish-study blocks and two history rows. “Start for real” deletes the sample database and returns to the real namespace.
 
-Privacy- or quality-conscious learners who already have podcasts, readings, recordings, or recall material and want one transparent daily loop around them. It does not generate exercises, choose difficulty, tutor through chat, or promise fluency.
+## Free and paid features
 
-## Run and test
+The routine builder, timer, rules, offline use, and complete export remain free. Plus is priced at $12 once and adds sessions from the last 90 days and printable study sheets. A valid license can be restored on another device. A refunded, revoked, or invalid license removes paid access.
 
-Requires Node.js 22.12+ (or Node.js 20.19+).
+Checkout is currently unavailable because billing registration is pending. The required public offer metadata is in `/work/.evidence/billing-offer.json` for the separate billing operator.
+
+## Run and verify
+
+Use Node.js 22 and npm.
 
 ```sh
 npm ci
-npm run dev
 npm test
 npm run build
 npm run test:e2e
 ```
 
-`npm run build` is the production build command. It writes the static deploy artifact to `./dist`, with `dist/index.html` at its root. `test:e2e` builds and serves that artifact automatically, then exercises desktop, 390px mobile, offline persistence, and axe accessibility checks in Chromium.
+The build writes the deployable static app to `dist/`. `npm run test:e2e` builds and serves it, then checks desktop and 390 px phone behavior. The same suite covers accessibility, keyboard focus, isolated demo data, invalid input, offline reload, metadata, and HTTP 404 behavior.
 
-## Data and billing
+Every public product claim has one command in [`.factory/claims.json`](.factory/claims.json). Run a single claim exactly as listed, or run all claim tests:
 
-Study data is stored in the browser’s IndexedDB database `no-ai-language-path`. License tokens and a daily verification verdict use the documented `sb_license:no-ai-language-path` localStorage key. Checkout and verification use only the Sociobot billing API; there is no embedded payment provider and no hardcoded product ID.
+```sh
+npm run test:claims -- --project=chromium
+```
 
-For static deployment, publish `dist/` and configure history fallback to `index.html` so direct visits to `/privacy`, `/terms`, and other client routes work. The service worker handles subsequent navigation offline.
+## Deploy
+
+Publish `dist/` to the product’s Azure Static Web App. Keep [`staticwebapp.config.json`](public/staticwebapp.config.json) with the artifact so route rewrites, 404 responses, CSP, and cache rules apply.
+
+## Product records
+
+- [Researched brief](.factory/brief.json)
+- [Visual system and asset provenance](.factory/design.md)
+- [Demo contract](.factory/demo.md)
+- [Repair handoff](.factory/handoff.md)
+- [Privacy](https://no-ai-language-path.sociobot.in/privacy)
+- [Terms](https://no-ai-language-path.sociobot.in/terms)
 
 ## License
 

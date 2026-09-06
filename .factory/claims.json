@@ -1,0 +1,184 @@
+[
+  {
+    "id": "demo-isolation",
+    "claim": "The one-click sample uses separate storage, can be reset, and does not change real routine data.",
+    "where": "Home sample action, demo banner, privacy page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:demo-isolation$'",
+    "sandbox": "Fresh browser; seed real routine, edit and reset demo, leave demo, assert real routine is unchanged."
+  },
+  {
+    "id": "four-part-routine",
+    "claim": "A routine can contain listening, reading, speaking, and recall blocks.",
+    "where": "Home, How it works, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:four-part-routine$'",
+    "sandbox": "Fresh demo; assert all four labeled block types and the sample duration."
+  },
+  {
+    "id": "edit-blocks",
+    "claim": "Routine blocks are editable.",
+    "where": "Routine editor, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:edit-blocks$'",
+    "sandbox": "Fresh demo; edit a block title, reload, and assert the edited title remains."
+  },
+  {
+    "id": "reorder-blocks",
+    "claim": "Routine blocks can be reordered without dragging.",
+    "where": "Routine editor, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:reorder-blocks$'",
+    "sandbox": "Fresh demo; move the second block earlier and assert order after reload."
+  },
+  {
+    "id": "private-source-links",
+    "claim": "Optional source links stay local until the learner opens them.",
+    "where": "Block editor, privacy section, privacy page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:private-source-links$'",
+    "sandbox": "Fresh demo with request capture; save a source, reload it, and assert no request reaches that source."
+  },
+  {
+    "id": "guided-session",
+    "claim": "The session screen provides a timer and ordered block checklist.",
+    "where": "How it works, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:guided-session$'",
+    "sandbox": "Fresh demo; start and pause the timer, then complete one of four listed blocks."
+  },
+  {
+    "id": "completion-history",
+    "claim": "Complete sessions are recorded in local history.",
+    "where": "History page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:completion-history$'",
+    "sandbox": "Fresh demo; complete all blocks and assert a third history row remains after reload."
+  },
+  {
+    "id": "progression-rule",
+    "claim": "The next stage becomes available only after the configured number of complete sessions.",
+    "where": "Home progression panel, rules page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:progression-rule$'",
+    "sandbox": "Fresh demo begins at two of three sessions; complete one routine and assert Stage 2."
+  },
+  {
+    "id": "rule-preserves-history",
+    "claim": "Changing the session threshold does not rewrite completion history.",
+    "where": "Rules page",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:rule-preserves-history$'",
+    "sandbox": "Fresh demo; change threshold and assert both existing history rows remain."
+  },
+  {
+    "id": "user-controlled-content",
+    "claim": "The app does not automatically change content or difficulty.",
+    "where": "Privacy and limits section, rules page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:user-controlled-content$'",
+    "sandbox": "Fresh demo; change only the threshold and assert every block title remains unchanged."
+  },
+  {
+    "id": "offline-reload",
+    "claim": "The routine works offline after the first visit.",
+    "where": "Home facts, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:offline-reload$'",
+    "sandbox": "Separate fresh context; load demo once, wait for control, clear HTTP cache, go offline, reload, and assert the routine."
+  },
+  {
+    "id": "installable-pwa",
+    "claim": "The app provides an installable PWA shell.",
+    "where": "README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:installable-pwa$'",
+    "sandbox": "Fresh demo; inspect the fetched manifest and assert an active service worker."
+  },
+  {
+    "id": "local-persistence",
+    "claim": "Routine data persists in IndexedDB across reloads.",
+    "where": "Privacy page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:local-persistence$'",
+    "sandbox": "Fresh demo; change a duration, reload, and assert the changed total."
+  },
+  {
+    "id": "privacy-network",
+    "claim": "Normal study use makes no model, analytics, tracking, or user-data requests to another origin.",
+    "where": "Home facts, privacy page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:privacy-network$'",
+    "sandbox": "Fresh demo with full request capture; edit and export, then assert only same-origin GET requests."
+  },
+  {
+    "id": "no-account",
+    "claim": "The free routine can be used without an account.",
+    "where": "README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:no-account$'",
+    "sandbox": "Fresh demo; assert no credential inputs and begin the routine without authentication."
+  },
+  {
+    "id": "no-file-upload",
+    "claim": "Import reads a local file without uploading it.",
+    "where": "Block editor, privacy section, privacy page",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:no-file-upload$'",
+    "sandbox": "Fresh demo with request capture; choose a local JSON file and assert only same-origin requests."
+  },
+  {
+    "id": "complete-export",
+    "claim": "JSON export includes the routine, rule, and complete history.",
+    "where": "Data page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:complete-export$'",
+    "sandbox": "Fresh demo; download and parse JSON, then assert four blocks, rule, and both history records."
+  },
+  {
+    "id": "confirmed-import",
+    "claim": "Import asks before replacing current data.",
+    "where": "Data page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:confirmed-import$'",
+    "sandbox": "Fresh demo; dismiss replacement once, then accept and assert the imported routine."
+  },
+  {
+    "id": "erase-local-data",
+    "claim": "Local deletion removes the routine and history.",
+    "where": "Data page, privacy page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:erase-local-data$'",
+    "sandbox": "Enter through demo, start with an empty real namespace, create a routine, erase it, reload, and assert the empty state."
+  },
+  {
+    "id": "free-core",
+    "claim": "The routine builder, timer, rules, offline use, and complete export remain free.",
+    "where": "Home paid section, Plus page, terms, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:free-core$'",
+    "sandbox": "Fresh demo without a license; assert session, rule, and export controls are enabled."
+  },
+  {
+    "id": "plus-offer",
+    "claim": "Plus is priced at $12 once, and checkout is unavailable while product registration is pending.",
+    "where": "Home, Plus page, terms, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:plus-offer$'",
+    "sandbox": "Fresh demo; open Plus and assert both exact price and current checkout status."
+  },
+  {
+    "id": "plus-history",
+    "claim": "Plus shows completed sessions from the last 90 days.",
+    "where": "Plus page, history page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:plus-history$'",
+    "sandbox": "Fresh demo; seed 18 recent rows and a cached valid license, then assert all 18 appear."
+  },
+  {
+    "id": "print-study-sheet",
+    "claim": "Plus provides printable study sheets.",
+    "where": "Plus page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:print-study-sheet$'",
+    "sandbox": "Fresh demo with cached valid license; invoke the print control and assert window.print runs."
+  },
+  {
+    "id": "restore-license",
+    "claim": "A valid Plus license can be restored on another device.",
+    "where": "Plus page, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:restore-license$'",
+    "sandbox": "Fresh demo with recorded valid verification response; paste token and assert local active state."
+  },
+  {
+    "id": "revoked-license",
+    "claim": "A refunded, revoked, or invalid license removes paid access.",
+    "where": "Plus page, terms, README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:revoked-license$'",
+    "sandbox": "Fresh demo with recorded revoked response; start from cached paid state and assert print control is removed."
+  },
+  {
+    "id": "build-output",
+    "claim": "The documented Node 22 build produces a served dist application.",
+    "where": "README",
+    "test": "npm run test:claims -- --project=chromium --grep '@claim:build-output$'",
+    "sandbox": "Playwright web server runs the production build; assert Node 22, HTTP 200, and the main landmark."
+  }
+]
