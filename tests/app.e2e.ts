@@ -147,6 +147,15 @@ test('stores a returned license and removes it from the address bar', async ({ p
   expect(await page.evaluate(() => localStorage.getItem('sb_license:no-ai-language-path'))).toBe('returned-token');
 });
 
+test('shows the reload action when a controlled app receives an update', async ({ page }) => {
+  await page.goto('/demo');
+  await waitForServiceWorkerControl(page);
+  await page.reload();
+  await page.evaluate(() => navigator.serviceWorker.dispatchEvent(new Event('controllerchange')));
+  await expect(page.getByRole('status').filter({ hasText: 'An update is ready.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Reload app' })).toBeVisible();
+});
+
 test('a fresh controlled profile boots from the precache with Vary: Origin offline', async ({ browser }, testInfo) => {
   const baseURL = testInfo.project.use.baseURL;
   if (!baseURL) throw new Error('The offline regression needs a base URL.');

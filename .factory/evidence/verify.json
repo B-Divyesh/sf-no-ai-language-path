@@ -1,14 +1,14 @@
 {
   "url": "https://no-ai-language-path.sociobot.in/",
-  "loadMs": 711,
+  "loadMs": 868,
   "errors": [],
   "a11y": {
-    "title": "No-AI Language Path — your routine, your rules",
+    "title": "No-AI Language Path — Build a study routine",
     "lang": "en",
     "h1": 1,
     "main": true,
     "imgsMissingAlt": 0,
     "buttonsUnlabeled": 0,
-    "textLength": 761
+    "textLength": 1554
   }
 }
