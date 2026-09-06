@@ -161,6 +161,7 @@ test('a fresh controlled profile boots from the precache with Vary: Origin offli
       return Promise.all((await shell.keys()).map(async (request) => ({ path: new URL(request.url).pathname, vary: (await shell.match(request, { ignoreVary: true }))?.headers.get('vary') ?? '' })));
     });
     expect(precache.map((entry) => entry.path)).toEqual(expect.arrayContaining(['/index.html', expect.stringMatching(/^\/assets\/index-.*\.js$/), expect.stringMatching(/^\/assets\/index-.*\.css$/)]));
+    expect(precache.map((entry) => entry.path)).not.toContain('/staticwebapp.config.json');
     expect(precache.filter((entry) => /^\/assets\/index-.*\.(js|css)$/.test(entry.path)).every((entry) => /origin/i.test(entry.vary))).toBe(true);
     const client = await freshContext.newCDPSession(freshPage);
     await client.send('Network.clearBrowserCache');
