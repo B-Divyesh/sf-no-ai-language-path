@@ -46,7 +46,7 @@ Date: 2026-09-06 UTC
 
 ## Verification
 
-Clean worktree at `823eea8`, followed by the isolated live-precache repair at `b15f00b`:
+Clean worktree at `c83e699` (the deployed product bytes are from `b15f00b`):
 
 ```sh
 npm ci
@@ -60,8 +60,8 @@ npm audit --omit=dev
 Results:
 
 - Unit tests: 10 passed.
-- Full browser suite: 74 passed across desktop Chromium and 390px mobile before the isolated service-worker repair; the affected offline regression and update notice then passed in both profiles.
-- Claim commands: all 26 commands in `.factory/claims.json` passed separately.
+- Full browser suite: 76 passed across desktop Chromium and 390px mobile.
+- Claim commands: all 26 commands in `.factory/claims.json` passed separately from that clean worktree.
 - Build: `dist/index.html` present; JS 38,295 bytes raw / 12.40 KB gzip; CSS 19,578 bytes raw / 5.17 KB gzip.
 - Mobile hero: 107,862 bytes.
 - Live Lighthouse mobile: 100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO.
