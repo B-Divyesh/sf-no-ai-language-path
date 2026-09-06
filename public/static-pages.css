@@ -1,0 +1,10 @@
+:root { color-scheme: light; font-family: ui-sans-serif, system-ui, sans-serif; background: #f3e9d3; color: #172b33; }
+* { box-sizing: border-box; }
+body { min-width: 320px; min-height: 100vh; margin: 0; display: grid; grid-template-rows: auto 1fr auto; font-size: 18px; line-height: 1.55; background: #f3e9d3; }
+header, footer { padding: 24px max(20px, calc((100% - 760px) / 2)); background: #172b33; color: #f3e9d3; }
+header a { min-height: 44px; display: inline-flex; align-items: center; color: #fff1bd; font-weight: 850; }
+main { width: min(100% - 40px, 760px); margin: auto; padding: 72px 0; }
+h1 { max-width: 14ch; margin: 0 0 20px; font: 700 clamp(2.8rem, 8vw, 5rem)/1.05 Georgia, serif; }
+.label { color: #173f9f; font-size: .8rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+.button { min-height: 48px; display: inline-flex; align-items: center; margin-top: 16px; padding: 10px 18px; border: 2px solid #172b33; background: #2457d6; box-shadow: 4px 4px 0 #172b33; color: #fff; font-weight: 850; }
+:focus-visible { outline: 4px solid #d94b37; outline-offset: 4px; }

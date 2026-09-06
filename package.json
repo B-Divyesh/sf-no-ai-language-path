@@ -1,18 +1,20 @@
 {
   "name": "no-ai-language-path",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build && node scripts/generate-sw.mjs",
-    "preview": "vite preview --host 0.0.0.0",
+    "preview": "node scripts/serve.mjs",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:claims": "playwright test tests/claims.e2e.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "1.58.2",
+    "@types/node": "^22.20.1",
     "typescript": "5.7.3",
     "vite": "^7.3.6",
     "vitest": "^4.1.11"

@@ -3,7 +3,7 @@ import { readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
 const dist = new URL('../dist/', import.meta.url);
-const excluded = new Set(['sw.js']);
+const excluded = new Set(['sw.js', 'assets/social-1200x630.png']);
 
 async function filesIn(directory) {
   const entries = await readdir(directory, { withFileTypes: true });

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "language": "Spanish",
+  "routineName": "Bad backup",
+  "blocks": [
+    { "id": "a", "type": "listen", "title": "Bad", "instruction": "Bad", "minutes": 5 }
+  ],
+  "history": [],
+  "sessionsPerStage": 1.5,
+  "stage": 1.5,
+  "createdAt": "2026-09-06T00:00:00.000Z",
+  "updatedAt": "2026-09-06T00:00:00.000Z"
+}

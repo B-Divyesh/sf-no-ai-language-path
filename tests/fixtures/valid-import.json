@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "language": "French",
+  "routineName": "Imported French routine",
+  "blocks": [
+    { "id": "import-listen", "type": "listen", "title": "Listen to an interview", "instruction": "Play one saved interview excerpt twice.", "minutes": 7 },
+    { "id": "import-recall", "type": "recall", "title": "Recall the key point", "instruction": "Write the key point from memory.", "minutes": 3 }
+  ],
+  "history": [
+    { "id": "import-session", "completedAt": "2026-09-05T12:00:00.000Z", "durationSeconds": 600, "blockIds": ["import-listen", "import-recall"], "stage": 0 }
+  ],
+  "sessionsPerStage": 4,
+  "stage": 0,
+  "createdAt": "2026-09-04T12:00:00.000Z",
+  "updatedAt": "2026-09-05T12:00:00.000Z"
+}

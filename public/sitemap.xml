@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://no-ai-language-path.sociobot.in/</loc></url>
+  <url><loc>https://no-ai-language-path.sociobot.in/demo</loc></url>
+  <url><loc>https://no-ai-language-path.sociobot.in/history</loc></url>
+  <url><loc>https://no-ai-language-path.sociobot.in/rules</loc></url>
+  <url><loc>https://no-ai-language-path.sociobot.in/data</loc></url>
+  <url><loc>https://no-ai-language-path.sociobot.in/plus</loc></url>
   <url><loc>https://no-ai-language-path.sociobot.in/privacy</loc></url>
   <url><loc>https://no-ai-language-path.sociobot.in/terms</loc></url>
 </urlset>
